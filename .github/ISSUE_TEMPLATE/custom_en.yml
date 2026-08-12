@@ -1,0 +1,52 @@
+name: Other
+description: If it is not a bug or feature request
+title: "[Other]: "
+labels:
+  - question
+assignees:
+  - Gokujo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to open this issue.
+  - type: checkboxes
+    id: read-rules
+    attributes:
+      label: Licence agreement
+      description: Please read the [licence agreement](https://devcraft.club/pages/licence-agreement/).
+      options:
+        - label: I have read and agree to the licence agreement
+          required: true
+  - type: textarea
+    id: what-do-you-need
+    attributes:
+      label: What do you need?
+    validations:
+      required: true
+  - type: input
+    id: library-version
+    attributes:
+      label: Package / library version (if applicable)
+    validations:
+      required: false
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: PHP version
+      options:
+        - "8.5"
+        - "8.4"
+        - "8.3 (Default)"
+        - "8.2"
+        - "other"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / files
+      value: |
+        ![DESCRIPTION](LINK.png)
+    validations:
+      required: false

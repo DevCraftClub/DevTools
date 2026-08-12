@@ -1,0 +1,55 @@
+{
+	"name": "devcraftclub/dev-tools",
+	"description": "Reusable PHP attributes and validation utilities",
+	"type": "library",
+	"version": "1.0.0",
+	"homepage": "https://github.com/DevCraftClub/DevTools",
+	"support": {
+		"email": "dev@devcraft.club",
+		"issues": "https://github.com/DevCraftClub/DevTools/issues",
+		"forum": "https://devcraft.club",
+		"docs": "https://readme.devcraft.club/dev/dev-tools/1.0.0/guides/english"
+	},
+	"require": {
+		"php": ">=8.3",
+		"psr/log": "^3.0",
+		"analog/analog": "^1.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^11.0"
+	},
+	"license": "AGPL-3.0-or-later",
+	"autoload": {
+		"psr-4": {
+			"Devcraft\\Abstracts\\": "src/Abstracts/",
+			"Devcraft\\Attributes\\": "src/Attributes/",
+			"Devcraft\\Exceptions\\": "src/Exceptions/",
+			"Devcraft\\Interfaces\\": "src/Interfaces/",
+			"Devcraft\\Mapper\\": "src/Mapper/",
+			"Devcraft\\Runtime\\": "src/Runtime/",
+			"Devcraft\\Validation\\": "src/Validation/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Devcraft\\DevTools\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": "phpunit"
+	},
+	"authors": [
+		{
+			"name": "Maxim Harder",
+			"email": "dev@devcraft.club",
+			"role": "developer",
+			"homepage": "https://devcraft.club"
+		},
+		{
+			"name": "DevCraft",
+			"email": "admin@devcraft.club",
+			"role": "company",
+			"homepage": "https://devcraft.club"
+		}
+	]
+}

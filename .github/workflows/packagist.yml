@@ -1,0 +1,22 @@
+name: Packagist
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  notify-packagist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Packagist
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.COMPOSER_USERNAME }}
+          PACKAGIST_TOKEN: ${{ secrets.COMPOSER_UPDATE_API_KEY }}
+        run: |
+          test -n "$PACKAGIST_USERNAME" && test -n "$PACKAGIST_TOKEN"
+          curl --fail-with-body -sS -XPOST \
+            -H 'content-type:application/json' \
+            "https://packagist.org/api/update-package?username=${PACKAGIST_USERNAME}&apiToken=${PACKAGIST_TOKEN}" \
+            -d "{\"repository\":{\"url\":\"https://github.com/${{ github.repository }}\"}}"

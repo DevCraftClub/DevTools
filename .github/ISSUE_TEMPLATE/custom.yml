@@ -1,0 +1,53 @@
+name: Другие запросы
+description: Если не подходит баг или feature — этот тикет
+title: "[Прочее]: "
+labels:
+  - Прочее
+assignees:
+  - Gokujo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что нашли время, чтобы составить этот отчёт
+  - type: checkboxes
+    id: read-rules
+    attributes:
+      label: Пользовательское соглашение
+      description: Перед просьбой добавить или "починить" что-либо в срочном порядке - [нужно прочесть соглашение](https://devcraft.club/pages/licence-agreement/).
+      options:
+        - label: Я прочёл / прочла соглашение и согласен / согласна с ними
+          required: true
+  - type: textarea
+    id: what-do-you-need
+    attributes:
+      label: В чём соль?
+      description: Опиши запрос как можно детальнее.
+    validations:
+      required: true
+  - type: input
+    id: library-version
+    attributes:
+      label: Версия библиотеки / пакета (если применимо)
+    validations:
+      required: false
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: Версия PHP
+      options:
+        - "8.5"
+        - "8.4"
+        - "8.3 (Default)"
+        - "8.2"
+        - "другое"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Скриншоты и файлы
+      value: |
+        ![DESCRIPTION](LINK.png)
+    validations:
+      required: false
