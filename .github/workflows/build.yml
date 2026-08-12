@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     if: github.event.pull_request.merged == true
-    runs-on: [self-hosted, debian-13-sh]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build install archive
