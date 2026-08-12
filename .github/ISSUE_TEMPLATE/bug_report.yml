@@ -1,0 +1,73 @@
+name: Ошибка
+description: Сообщить об ошибке / баге в библиотеке
+title: "[Ошибка]: "
+labels:
+  - Ошибка
+  - bug
+assignees:
+  - Gokujo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что нашли время, чтобы составить этот отчёт
+  - type: checkboxes
+    id: read-rules
+    attributes:
+      label: Пользовательское соглашение
+      description: Перед просьбой добавить или "починить" что-либо в срочном порядке - [нужно прочесть соглашение](https://devcraft.club/pages/licence-agreement/).
+      options:
+        - label: Я прочёл / прочла соглашение и согласен / согласна с ними
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: В чём проблема?
+      description: Опиши проблему и шаги воспроизведения.
+      placeholder: Что произошло и как это повторить
+    validations:
+      required: true
+  - type: textarea
+    id: what-should-happen
+    attributes:
+      label: Что ожидали?
+      description: Ожидаемое поведение
+    validations:
+      required: false
+  - type: input
+    id: library-version
+    attributes:
+      label: Версия библиотеки / пакета
+      description: Версия из Composer / Packagist / CHANGELOG
+      placeholder: например 1.2.3
+    validations:
+      required: true
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: Версия PHP
+      description: На какой версии PHP воспроизводится?
+      options:
+        - "8.5"
+        - "8.4"
+        - "8.3 (Default)"
+        - "8.2"
+        - "другое"
+    validations:
+      required: true
+  - type: input
+    id: composer-version
+    attributes:
+      label: Версия Composer (опционально)
+      description: Вывод `composer --version`
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Скриншоты / логи
+      description: Трейсы, логи, скриншоты
+      value: |
+        ![DESCRIPTION](LINK.png)
+    validations:
+      required: false

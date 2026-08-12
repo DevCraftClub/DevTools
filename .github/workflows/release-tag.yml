@@ -1,0 +1,55 @@
+name: Release tag
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    if: >
+      github.event.pull_request.merged == true &&
+      contains(join(github.event.pull_request.labels.*.name, ','), 'Publish') &&
+      contains(join(github.event.pull_request.labels.*.name, ','), 'releases/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Create tag from releases/v* label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="$(jq -r '[.pull_request.labels[].name | select(startswith("releases/v"))][0] // empty | sub("^releases/"; "")' "$GITHUB_EVENT_PATH")"
+          if [ -z "$TAG" ]; then
+            echo "No releases/v* label found"
+            exit 1
+          fi
+          case "$TAG" in
+            v*) ;;
+            *) echo "Tag must start with v, got: $TAG"; exit 1 ;;
+          esac
+
+          SHA="${{ github.event.pull_request.merge_commit_sha }}"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            EXISTING="$(git rev-list -n 1 "refs/tags/${TAG}")"
+            if [ "$EXISTING" = "$SHA" ]; then
+              echo "Tag ${TAG} already points at ${SHA} — skip"
+              exit 0
+            fi
+            echo "Tag ${TAG} exists at ${EXISTING}, refusing to move to ${SHA}"
+            exit 1
+          fi
+
+          git config user.email "ci@devcraft.club"
+          git config user.name "DevBot CI"
+          git tag -a "$TAG" -m "Release ${TAG}" "$SHA"
+          git push origin "refs/tags/${TAG}"
+          echo "Created tag ${TAG} at ${SHA}"

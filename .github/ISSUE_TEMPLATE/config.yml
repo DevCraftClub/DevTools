@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://readme.devcraft.club/
+    about: DevCraft documentation site.
+  - name: Licence agreement
+    url: https://devcraft.club/pages/licence-agreement/
+    about: Licence agreement before support requests.

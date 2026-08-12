@@ -1,0 +1,54 @@
+name: Feature request
+description: Suggest a new library capability
+title: "[Feature]: "
+labels:
+  - enhancement
+assignees:
+  - Gokujo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file this request.
+  - type: checkboxes
+    id: read-rules
+    attributes:
+      label: Licence agreement
+      description: Please read the [licence agreement](https://devcraft.club/pages/licence-agreement/) before requesting urgent changes.
+      options:
+        - label: I have read and agree to the licence agreement
+          required: true
+  - type: textarea
+    id: what-do-you-need
+    attributes:
+      label: What do you need?
+      description: Describe the desired feature in detail.
+    validations:
+      required: true
+  - type: input
+    id: library-version
+    attributes:
+      label: Package / library version (if applicable)
+      placeholder: e.g. 1.2.3
+    validations:
+      required: false
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: PHP version
+      options:
+        - "8.5"
+        - "8.4"
+        - "8.3 (Default)"
+        - "8.2"
+        - "other"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / files
+      value: |
+        ![DESCRIPTION](LINK.png)
+    validations:
+      required: false

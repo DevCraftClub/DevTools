@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a bug in the library
+title: "[Bug]: "
+labels:
+  - bug
+assignees:
+  - Gokujo
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file this report.
+  - type: checkboxes
+    id: read-rules
+    attributes:
+      label: Licence agreement
+      description: Please read the [licence agreement](https://devcraft.club/pages/licence-agreement/) before requesting urgent fixes.
+      options:
+        - label: I have read and agree to the licence agreement
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug and steps to reproduce.
+      placeholder: Steps and observed behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: what-should-happen
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: false
+  - type: input
+    id: library-version
+    attributes:
+      label: Package / library version
+      description: Version from Composer / Packagist / CHANGELOG
+      placeholder: e.g. 1.2.3
+    validations:
+      required: true
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: PHP version
+      options:
+        - "8.5"
+        - "8.4"
+        - "8.3 (Default)"
+        - "8.2"
+        - "other"
+    validations:
+      required: true
+  - type: input
+    id: composer-version
+    attributes:
+      label: Composer version (optional)
+      description: Output of `composer --version`
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / logs
+      value: |
+        ![DESCRIPTION](LINK.png)
+    validations:
+      required: false
