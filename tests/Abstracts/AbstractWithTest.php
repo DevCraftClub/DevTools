@@ -4,57 +4,58 @@ declare(strict_types=1);
 
 namespace Devcraft\DevTools\Tests\Abstracts;
 
+use Lombok\Getter;
+use Lombok\Setter;
 use BadMethodCallException;
-use Devcraft\Abstracts\AbstractWith;
-use Devcraft\Attributes\With;
 use PHPUnit\Framework\TestCase;
+use Devcraft\Attributes\With;
+use Devcraft\Abstracts\AbstractWith;
 
-final class AbstractWithFixture extends AbstractWith
+#[Getter, Setter]
+final class AccessorFixture extends AbstractWith
 {
-	#[With]
-	private ?int $page = null;
+    #[With]
+    private ?int $page = null;
 
-	#[With]
-	private string $cursor = '';
-
-	public function page(): ?int
-	{
-		return $this->page;
-	}
-
-	public function cursor(): string
-	{
-		return $this->cursor;
-	}
+    private bool $visible = false;
 }
 
 final class AbstractWithTest extends TestCase
 {
-	public function testRoutesKnownVirtualMethodsAndSupportsFluentChaining(): void
-	{
-		$fixture = new AbstractWithFixture();
+    public function testWithRoutesToWithHandlerAndGetterReadsValue(): void
+    {
+        $fixture = new AccessorFixture();
 
-		$returned = $fixture
-			->withPage(7)
-			->withCursor('next-page');
+        $returned = $fixture->withPage(4);
 
-		self::assertSame($fixture, $returned);
-		self::assertSame(7, $fixture->page());
-		self::assertSame('next-page', $fixture->cursor());
-	}
+        self::assertSame($fixture, $returned);
+        self::assertSame(4, $fixture->getPage());
+    }
 
-	public function testUnknownMethodThrowsBadMethodCallException(): void
-	{
-		$fixture = new AbstractWithFixture();
+    public function testSetterMutatesAndReturnsSameInstance(): void
+    {
+        $fixture = new AccessorFixture();
 
-		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage(sprintf(
-			'Call to undefined method %s::%s()',
-			AbstractWithFixture::class,
-			'missing',
-		));
+        $returned = $fixture->setPage(9);
 
-		$fixture->missing();
-	}
+        self::assertSame($fixture, $returned);
+        self::assertSame(9, $fixture->getPage());
+    }
+
+    public function testBooleanPropertyUsesIsPrefix(): void
+    {
+        $fixture = new AccessorFixture();
+
+        self::assertFalse($fixture->isVisible());
+        self::assertSame($fixture, $fixture->setVisible(true));
+        self::assertTrue($fixture->isVisible());
+    }
+
+    public function testUnknownMethodThrowsBadMethodCallException(): void
+    {
+        $fixture = new AccessorFixture();
+
+        $this->expectException(BadMethodCallException::class);
+        $fixture->missing();
+    }
 }
-
