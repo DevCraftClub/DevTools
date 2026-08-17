@@ -1,19 +1,19 @@
 {
 	"name": "devcraftclub/dev-tools",
 	"description": "Reusable PHP attributes and validation utilities",
-	"type": "library",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"homepage": "https://github.com/DevCraftClub/DevTools",
 	"support": {
 		"email": "dev@devcraft.club",
 		"issues": "https://github.com/DevCraftClub/DevTools/issues",
 		"forum": "https://devcraft.club",
-		"docs": "https://readme.devcraft.club/dev/dev-tools/1.0.0/guides/english"
+		"docs": "https://readme.devcraft.club/dev/dev-tools/1.0.1/en/getting_started"
 	},
 	"require": {
 		"php": ">=8.3",
 		"psr/log": "^3.0",
-		"analog/analog": "^1.0"
+		"analog/analog": "^1.0",
+		"marcin-orlowski/lombok-php": "^1.2"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^11.0"
@@ -43,7 +43,7 @@
 			"name": "Maxim Harder",
 			"email": "dev@devcraft.club",
 			"role": "developer",
-			"homepage": "https://devcraft.club"
+			"homepage": "https://maxim-harder.de"
 		},
 		{
 			"name": "DevCraft",
