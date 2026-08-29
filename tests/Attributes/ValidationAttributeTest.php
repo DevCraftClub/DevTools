@@ -4,48 +4,17 @@ declare(strict_types=1);
 
 namespace Devcraft\DevTools\Tests\Attributes;
 
-use Devcraft\Attributes\ArrayOf;
-use Devcraft\Attributes\Filter;
 use Devcraft\Attributes\Range;
 use Devcraft\Attributes\Regex;
+use Devcraft\Attributes\Filter;
+use PHPUnit\Framework\TestCase;
+use Devcraft\Attributes\ArrayOf;
 use Devcraft\Interfaces\ValidationRule;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 
-final class ValidationAttributeTest extends TestCase
-{
-	#[DataProvider('validationRuleProvider')]
-	public function testValidationRulesAcceptValidValues(
-		ValidationRule $rule,
-		mixed $validValue,
-		mixed $invalidValue,
-		string $expectedMessage,
-	): void {
-		self::assertNull($rule->validate($validValue));
-	}
+final class ValidationAttributeTest extends TestCase {
 
-	#[DataProvider('validationRuleProvider')]
-	public function testValidationRulesRejectInvalidValues(
-		ValidationRule $rule,
-		mixed $validValue,
-		mixed $invalidValue,
-		string $expectedMessage,
-	): void {
-		self::assertSame($expectedMessage, $rule->validate($invalidValue));
-	}
-
-	#[DataProvider('validationRuleProvider')]
-	public function testValidationRulesAllowNull(
-		ValidationRule $rule,
-		mixed $validValue,
-		mixed $invalidValue,
-		string $expectedMessage,
-	): void {
-		self::assertNull($rule->validate(null));
-	}
-
-	public static function validationRuleProvider(): iterable
-	{
+	public static function validationRuleProvider(): iterable {
 		yield 'filter' => [
 			new Filter(FILTER_VALIDATE_EMAIL),
 			'user@example.com',
@@ -74,4 +43,35 @@ final class ValidationAttributeTest extends TestCase
 			'must be a list of string',
 		];
 	}
+
+	#[DataProvider('validationRuleProvider')]
+	public function testValidationRulesAcceptValidValues(
+		ValidationRule $rule,
+		mixed          $validValue,
+		mixed          $invalidValue,
+		string         $expectedMessage,
+	): void {
+		self::assertNull($rule->validate($validValue));
+	}
+
+	#[DataProvider('validationRuleProvider')]
+	public function testValidationRulesRejectInvalidValues(
+		ValidationRule $rule,
+		mixed          $validValue,
+		mixed          $invalidValue,
+		string         $expectedMessage,
+	): void {
+		self::assertSame($expectedMessage, $rule->validate($invalidValue));
+	}
+
+	#[DataProvider('validationRuleProvider')]
+	public function testValidationRulesAllowNull(
+		ValidationRule $rule,
+		mixed          $validValue,
+		mixed          $invalidValue,
+		string         $expectedMessage,
+	): void {
+		self::assertNull($rule->validate(NULL));
+	}
+
 }

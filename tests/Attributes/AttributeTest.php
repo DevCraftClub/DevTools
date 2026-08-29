@@ -10,30 +10,28 @@ use Devcraft\Attributes\With;
 use PHPUnit\Framework\TestCase;
 use Devcraft\Attributes\WithItem;
 
-final class AttributeTest extends TestCase
-{
-    public function testWithTargetsOnlyPropertiesAndIsNotRepeatable(): void
-    {
-        $attribute = (new ReflectionClass(With::class))
-            ->getAttributes(Attribute::class)[0]
-            ->newInstance();
+final class AttributeTest extends TestCase {
 
-        self::assertSame(Attribute::TARGET_PROPERTY, $attribute->flags);
-    }
+	public function testWithTargetsOnlyPropertiesAndIsNotRepeatable(): void {
+		$attribute = (new ReflectionClass(With::class))
+			             ->getAttributes(Attribute::class)[0]
+			->newInstance();
 
-    public function testWithItemPreservesOrderedTypePositions(): void
-    {
-        $attribute = new WithItem('string', ['int', 'null']);
+		self::assertSame(Attribute::TARGET_PROPERTY, $attribute->flags);
+	}
 
-        self::assertSame(['string', ['int', 'null']], $attribute->types());
-    }
+	public function testWithItemPreservesOrderedTypePositions(): void {
+		$attribute = new WithItem('string', ['int', 'null']);
 
-    public function testWithItemTargetsOnlyPropertiesAndIsNotRepeatable(): void
-    {
-        $attribute = (new ReflectionClass(WithItem::class))
-            ->getAttributes(Attribute::class)[0]
-            ->newInstance();
+		self::assertSame(['string', ['int', 'null']], $attribute->types());
+	}
 
-        self::assertSame(Attribute::TARGET_PROPERTY, $attribute->flags);
-    }
+	public function testWithItemTargetsOnlyPropertiesAndIsNotRepeatable(): void {
+		$attribute = (new ReflectionClass(WithItem::class))
+			             ->getAttributes(Attribute::class)[0]
+			->newInstance();
+
+		self::assertSame(Attribute::TARGET_PROPERTY, $attribute->flags);
+	}
+
 }
