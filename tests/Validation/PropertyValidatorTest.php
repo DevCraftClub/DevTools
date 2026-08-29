@@ -4,39 +4,32 @@ declare(strict_types=1);
 
 namespace Devcraft\DevTools\Tests\Validation;
 
-use Devcraft\Attributes\Filter;
-use Devcraft\Attributes\Range;
-use Devcraft\Attributes\Regex;
-use Devcraft\Validation\PropertyValidator;
-use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Devcraft\Attributes\Regex;
+use Devcraft\Attributes\Range;
+use PHPUnit\Framework\TestCase;
+use Devcraft\Attributes\Filter;
+use Devcraft\Validation\PropertyValidator;
 
-final class PropertyValidatorValueFixture
-{
-	#[Range(min: 10)]
-	#[Regex('/^\d+$/')]
-	public mixed $value = null;
-}
+final class PropertyValidatorObjectFixture {
 
-final class PropertyValidatorObjectFixture
-{
 	#[Filter(FILTER_VALIDATE_INT)]
 	#[Regex('/^\d+$/')]
-	public mixed $code = null;
+	public mixed $code = NULL;
 
 	#[Range(min: 1)]
-	public ?int $optional = null;
+	public ?int $optional = NULL;
 
 	#[Range(min: 1)]
 	private int $ignored = 0;
+
 }
 
-final class PropertyValidatorTest extends TestCase
-{
-	public function testValidateValueCollectsErrorsFromMultipleRules(): void
-	{
+final class PropertyValidatorTest extends TestCase {
+
+	public function testValidateValueCollectsErrorsFromMultipleRules(): void {
 		$validator = new PropertyValidator();
-		$property = new ReflectionProperty(PropertyValidatorValueFixture::class, 'value');
+		$property  = new ReflectionProperty(PropertyValidatorValueFixture::class, 'value');
 
 		self::assertSame([
 			'must be numeric',
@@ -44,17 +37,15 @@ final class PropertyValidatorTest extends TestCase
 		], $validator->validateValue($property, 'abc'));
 	}
 
-	public function testValidateValueAllowsNull(): void
-	{
+	public function testValidateValueAllowsNull(): void {
 		$validator = new PropertyValidator();
-		$property = new ReflectionProperty(PropertyValidatorValueFixture::class, 'value');
+		$property  = new ReflectionProperty(PropertyValidatorValueFixture::class, 'value');
 
-		self::assertSame([], $validator->validateValue($property, null));
+		self::assertSame([], $validator->validateValue($property, NULL));
 	}
 
-	public function testValidateObjectReturnsOnlyPublicInitializedPropertyErrors(): void
-	{
-		$fixture = new PropertyValidatorObjectFixture();
+	public function testValidateObjectReturnsOnlyPublicInitializedPropertyErrors(): void {
+		$fixture       = new PropertyValidatorObjectFixture();
 		$fixture->code = 'abc';
 
 		$validator = new PropertyValidator();
@@ -66,4 +57,13 @@ final class PropertyValidatorTest extends TestCase
 			],
 		], $validator->validateObject($fixture));
 	}
+
+}
+
+final class PropertyValidatorValueFixture {
+
+	#[Range(min: 10)]
+	#[Regex('/^\d+$/')]
+	public mixed $value = NULL;
+
 }

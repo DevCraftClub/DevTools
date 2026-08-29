@@ -4,28 +4,23 @@ declare(strict_types=1);
 
 namespace Devcraft\DevTools\Tests\Mapper;
 
-use Devcraft\Abstracts\AbstractReflection;
-use Devcraft\Attributes\ArrayOf;
-use Devcraft\Attributes\Range;
-use Devcraft\Exceptions\ValidationException;
-use Devcraft\Mapper\ReflectionMapper;
-use PHPUnit\Framework\TestCase;
+use Stringable;
 use Psr\Log\AbstractLogger;
+use Devcraft\Attributes\Range;
+use PHPUnit\Framework\TestCase;
+use Devcraft\Attributes\ArrayOf;
+use Devcraft\Mapper\ReflectionMapper;
+use Devcraft\Abstracts\AbstractReflection;
+use Devcraft\Exceptions\ValidationException;
 
-final class ReflectionMapperScalarFixture extends AbstractReflection
-{
-	public int $count;
-	public float $ratio;
-	public bool $active;
-}
+final class ReflectionMapperChildFixture extends AbstractReflection {
 
-final class ReflectionMapperChildFixture extends AbstractReflection
-{
 	public string $label;
+
 }
 
-final class ReflectionMapperCompositeFixture extends AbstractReflection
-{
+final class ReflectionMapperCompositeFixture extends AbstractReflection {
+
 	public ReflectionMapperChildFixture $child;
 
 	#[ArrayOf('int')]
@@ -33,18 +28,11 @@ final class ReflectionMapperCompositeFixture extends AbstractReflection
 
 	#[ArrayOf(ReflectionMapperChildFixture::class)]
 	public array $children = [];
+
 }
 
-final class ReflectionMapperNullableFixture extends AbstractReflection
-{
-	public ?int $optional;
+final class ReflectionMapperInvalidFixture extends AbstractReflection {
 
-	#[Range(min: 10)]
-	public ?int $score = 20;
-}
-
-final class ReflectionMapperInvalidFixture extends AbstractReflection
-{
 	public int $required;
 
 	#[Range(min: 5)]
@@ -55,33 +43,50 @@ final class ReflectionMapperInvalidFixture extends AbstractReflection
 
 	#[ArrayOf('int')]
 	public array $ids = [];
+
 }
 
-final class ReflectionMapperLogger extends AbstractLogger
-{
+final class ReflectionMapperLogger extends AbstractLogger {
+
 	/** @var list<array{level: string, message: string, context: array<string, mixed>}> */
 	public array $records = [];
 
-	public function log($level, string|\Stringable $message, array $context = []): void
-	{
+	public function log($level, string|Stringable $message, array $context = []): void {
 		$this->records[] = [
-			'level' => (string) $level,
+			'level'   => (string) $level,
 			'message' => (string) $message,
 			'context' => $context,
 		];
 	}
+
 }
 
-final class ReflectionMapperTest extends TestCase
-{
-	public function testHydrateConvertsSupportedScalarValues(): void
-	{
+final class ReflectionMapperNullableFixture extends AbstractReflection {
+
+	public ?int $optional;
+
+	#[Range(min: 10)]
+	public ?int $score = 20;
+
+}
+
+final class ReflectionMapperScalarFixture extends AbstractReflection {
+
+	public int   $count;
+	public float $ratio;
+	public bool  $active;
+
+}
+
+final class ReflectionMapperTest extends TestCase {
+
+	public function testHydrateConvertsSupportedScalarValues(): void {
 		$fixture = new ReflectionMapperScalarFixture();
-		$mapper = new ReflectionMapper(new ReflectionMapperLogger());
+		$mapper  = new ReflectionMapper(new ReflectionMapperLogger());
 
 		$mapper->hydrate($fixture, [
-			'count' => '12',
-			'ratio' => '2.5',
+			'count'  => '12',
+			'ratio'  => '2.5',
 			'active' => 'false',
 		]);
 
@@ -90,14 +95,13 @@ final class ReflectionMapperTest extends TestCase
 		self::assertFalse($fixture->active);
 	}
 
-	public function testHydrateBuildsNestedDtosAndArrayOfValues(): void
-	{
+	public function testHydrateBuildsNestedDtosAndArrayOfValues(): void {
 		$fixture = new ReflectionMapperCompositeFixture();
-		$mapper = new ReflectionMapper(new ReflectionMapperLogger());
+		$mapper  = new ReflectionMapper(new ReflectionMapperLogger());
 
 		$mapper->hydrate($fixture, [
-			'child' => ['label' => 'primary'],
-			'ids' => ['1', 2, '3'],
+			'child'    => ['label' => 'primary'],
+			'ids'      => ['1', 2, '3'],
 			'children' => [
 				['label' => 'first'],
 				['label' => 'second'],
@@ -108,16 +112,16 @@ final class ReflectionMapperTest extends TestCase
 		self::assertSame('primary', $fixture->child->label);
 		self::assertSame([1, 2, 3], $fixture->ids);
 		self::assertContainsOnlyInstancesOf(ReflectionMapperChildFixture::class, $fixture->children);
-		self::assertSame(['first', 'second'], array_map(
-			static fn(ReflectionMapperChildFixture $child): string => $child->label,
-			$fixture->children,
-		));
+		self::assertSame(['first', 'second'],
+			array_map(
+				static fn(ReflectionMapperChildFixture $child): string => $child->label,
+				$fixture->children,
+			));
 	}
 
-	public function testHydrateUsesNullForNullablePropertiesWhenMissingOrInvalid(): void
-	{
+	public function testHydrateUsesNullForNullablePropertiesWhenMissingOrInvalid(): void {
 		$fixture = new ReflectionMapperNullableFixture();
-		$mapper = new ReflectionMapper(new ReflectionMapperLogger());
+		$mapper  = new ReflectionMapper(new ReflectionMapperLogger());
 
 		$mapper->hydrate($fixture, ['score' => 9]);
 
@@ -125,8 +129,7 @@ final class ReflectionMapperTest extends TestCase
 		self::assertNull($fixture->score);
 	}
 
-	public function testHydrateAggregatesValidationErrors(): void
-	{
+	public function testHydrateAggregatesValidationErrors(): void {
 		$logger = new ReflectionMapperLogger();
 		$mapper = new ReflectionMapper($logger);
 
@@ -134,15 +137,15 @@ final class ReflectionMapperTest extends TestCase
 			$mapper->hydrate(new ReflectionMapperInvalidFixture(), [
 				'score' => 100,
 				'child' => ['label' => 123],
-				'ids' => ['1', 'bad'],
+				'ids'   => ['1', 'bad'],
 			]);
 			self::fail('Invalid payload must raise a validation exception.');
-		} catch (ValidationException $exception) {
+		} catch(ValidationException $exception) {
 			self::assertSame([
-				'required' => ['is required'],
-				'score' => ['must be less than or equal to 10'],
+				'required'    => ['is required'],
+				'score'       => ['must be less than or equal to 10'],
 				'child.label' => ['must be string'],
-				'ids.1' => ['must be int'],
+				'ids.1'       => ['must be int'],
 			], $exception->getErrors());
 		}
 
@@ -151,9 +154,11 @@ final class ReflectionMapperTest extends TestCase
 			'score',
 			'child.label',
 			'ids.1',
-		], array_map(
-			static fn(array $record): string => $record['context']['property'],
-			$logger->records,
-		));
+		],
+			array_map(
+				static fn(array $record): string => $record['context']['property'],
+				$logger->records,
+			));
 	}
+
 }
